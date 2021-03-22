@@ -1,16 +1,19 @@
-@extends('admin.layouts.menu')
-
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
   <div class="col-md-12">
     <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
-  
+
       <ul class="nav nav-pills">
-        
+
       <form method="POST" action="{{ route('cliente.update',$cliente->id) }}" aria-label="{{ __('Clientes') }}" enctype="multipart/form-data">
         @method('PUT')
         <input type="hidden" name="hasta" id="hasta">
-        
-      
+
+
         <div class="card-body">
           <div class="row">
             @csrf
@@ -68,7 +71,7 @@
             <div class="col-md-3">
               <label for="pago1">Pago 1 realizado</label>
               <select id="pago1" name="pago1" class="form-control">
-           
+
                 @if($pagosDetalle1)
                 <option value="0"> No</option>
                 <option selected="" value="1"> Si</option>
@@ -76,13 +79,13 @@
                 <option value="0"> No</option>
                 <option value="1"> Si</option>
                 @endif
-              
+
               </select>
             </div>
             <div class="col-md-3">
               <label for="pago2">Pago 2 realizado</label>
               <select id="pago2" name="pago2" class="form-control">
-           
+
                 @if($pagosDetalle2)
                 <option value="0"> No</option>
                 <option selected="" value="1"> Si</option>
@@ -90,13 +93,13 @@
                 <option value="0"> No</option>
                 <option value="1"> Si</option>
                 @endif
-              
+
               </select>
             </div>
             <div class="col-md-3">
               <label for="pago3">Pago 3 realizado</label>
               <select id="pago3" name="pago3" class="form-control">
-           
+
                 @if($pagosDetalle3)
                 <option value="0"> No</option>
                 <option selected="" value="1"> Si</option>
@@ -104,13 +107,13 @@
                 <option value="0"> No</option>
                 <option value="1"> Si</option>
                 @endif
-              
+
               </select>
             </div>
             <div class="col-md-3">
               <label for="pago4">Pago 4 realizado</label>
               <select id="pago4" name="pago4" class="form-control">
-           
+
                 @if($pagosDetalle4)
                 <option value="0"> No</option>
                 <option selected="" value="1"> Si</option>
@@ -118,7 +121,7 @@
                 <option value="0"> No</option>
                 <option value="1"> Si</option>
                 @endif
-              
+
               </select>
             </div>
             <div class="col-md-3">
@@ -193,9 +196,9 @@
               <textarea id="concepto1" name="concepto1"></textarea>
               @endif
             </div>
-            
-            
-            
+
+
+
            <div class="col-md-3">
               <label> Concepto pago 2</label>
               @if($pagosDetalle2)
@@ -204,9 +207,9 @@
               <textarea id="concepto2" name="concepto2"></textarea>
               @endif
             </div>
-            
-            
-            
+
+
+
             <div class="col-md-3">
               <label> Concepto pago 3</label>
              @if($pagosDetalle3)
@@ -215,9 +218,9 @@
               <textarea id="concepto3" name="concepto3"></textarea>
               @endif
             </div>
-            
-            
-            
+
+
+
             <div class="col-md-3">
               <label> Concepto pago 4</label>
               @if($pagosDetalle4)
@@ -258,7 +261,7 @@
             @endforeach
           </select>
             </div>
-            
+
              <div class="col-md-4">
               <label for="tipoPoliza">Tipo de poliza</label>
               <select id="tipoPoliza" name="tipoPoliza" class="form-control">
@@ -335,7 +338,7 @@
                 @else
                   <option value="0">No</option>
                   <option selected=""  value="1">Si</option>
-                 
+
                 @endif
           </select>
             </div>
@@ -372,15 +375,15 @@
               <label for="telefono_emergencia">Telefono de emergencia</label>
               <input id="telefono_emergencia" type="text" placeholder="telefono_emergencia" class="form-control" name="telefono_emergencia"   value="{{$cliente->contrato->telefono_emergencia}}" autofocus>
             </div>
-            
-          
-            
-          
-     
+
+
+
+
+
             @include('modales.direcciones')
             @include('modales.vehiculos')
             @include('modales.licencias')
-       
+
             @if($cliente->tipo == 'D')
             <div class="col-md-12">
               <br>
@@ -403,19 +406,19 @@
                 <div class="col-md-4">
               <label for="fecha_uso">Fecha de uso</label>
               <input id="fecha_uso" type="date" placeholder="Fecha de uso" class="form-control" name="fecha_uso"  value="{{$grua->fecha_uso}}">
-            </div>                
+            </div>
             <div class="col-md-4">
               <label for="lugar_compustura">Lugar de compostura</label>
               <input id="lugar_compustura" type="text" placeholder="Lugar de compostura" class="form-control" name="lugar_compustura"   value="{{$grua->lugar_compustura}}">
-            </div>            
+            </div>
             <div class="col-md-4">
               <label for="lugar_arribo">Lugar de arribo</label>
               <input id="lugar_arribo" type="text" placeholder="Lugar de arribo" class="form-control" name="lugar_arribo"   value="{{$grua->lugar_arribo}}">
             </div>
-            
+
             @endif
                  </div>
-    
+
             @else
              <div class="col-md-12">
               <br>
@@ -436,15 +439,15 @@
                  <option selected="" value="{{$cliente->cobrador_id}}">{{$cliente->cobrador_id}}</option>
                </select>
             </div>
-            
+
              <div class="col-md-4">
               <label for="tipoPoliza">Tipo de poliza</label>
               <select id="tipoPoliza" name="tipoPoliza" class="form-control">
                 @if($cliente->tipo == 'P')
                 <option selected="" value="P">Personal</option>
-               
+
                 @else
-                
+
                 <option selected="" value="M">Multiple</option>
                 @endif
           </select>
@@ -531,7 +534,7 @@
             @include('modales.vehiculos')
             @include('modales.licencias')
             </div>
-           
+
             @endif
         <div class="card-footer">
           <div class="col-md-12">
@@ -547,25 +550,24 @@
             </center>
           </div>
         </div>
-   
+
       </form>
          </ul>
       <!-- formulario -->
     </div>
   </div>
-@endsection
-@push('js')
+</x-app-layout>
 <script defer src="{{asset('public/js/cliente/cliente.js')}}"></script>
-@endpush
+
 
 @if(Auth::user()->rol == 4)
-@push('js')
+
 <script defer src="{{asset('public/js/cliente/cliente.js')}}"></script>
    <script type="text/javascript">
      $(document).ready(function() {
          $(':input').attr('readonly',true);
-         
+
          })
 </script>
-@endpush
+
 @endif

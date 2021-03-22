@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Vendedore;
 use App\Models\Zona;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 class VendedoresController extends Controller
 {
@@ -28,7 +29,7 @@ class VendedoresController extends Controller
     public function create()
     {
 
-        return view('vendedores.createEdit');
+        return view('vendedores.create');
     }
 
     /**
@@ -41,6 +42,7 @@ class VendedoresController extends Controller
     {
       $vendedores = new Vendedore();
       $vendedores ->numero = $request->numero;
+      $vendedores->usuario_creo = Auth::user()->id;
       $vendedores ->save();
 
       Session::flash('flash_message', '¡Zona creada correctamente!.');
@@ -68,9 +70,7 @@ class VendedoresController extends Controller
     public function edit($id)
     {
         $vendedores = Vendedore::findorfail($id);
-          $zonas = new Zona();
-        $zonas = $zonas->all();
-      return view('vendedores.createEdit',compact('vendedores','zonas'));
+      return view('vendedores.edit',compact('vendedores'));
     }
 
     /**
@@ -83,11 +83,10 @@ class VendedoresController extends Controller
     public function update(Request $request, $id)
     {
       $vendedores = Vendedore::find($id);
-      $vendedores ->nombre = $request->nombre;
-      $vendedores ->zona_id = $request->zona;
+      $vendedores ->numero = $request->numero;
+      $vendedores->ultimo_usuario_modifico = Auth::user()->id;
       $vendedores ->save();
 
-      Session::flash('flash_message', '¡Zona creada correctamente!.');
 
       return redirect('vendedores');
     }
@@ -100,6 +99,10 @@ class VendedoresController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $vendedores = Vendedore::find($id);
+        $vendedores->usuario_elimino = Auth::user()->id;
+        $vendedores->save();
+        $vendedores->delete();
+        return redirect('vendedores');
     }
 }

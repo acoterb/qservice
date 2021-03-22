@@ -1,6 +1,9 @@
-@extends('admin.layouts.menu')
-
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
   <div class="col-md-12">
     <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
       <div class="card-header">
@@ -14,7 +17,7 @@
         <input type="hidden" name="hasta" id="hasta">
         <input type="hidden" name = "diaHoy" id="diaHoy" value="{{$date_now = date('d-m-Y')}}">
          <input type="hidden" name = "diaHoyMas30" id="diaHoyMas30" value="{{$date_future = strtotime('+30 day', strtotime($date_now))}}">
-        
+
         <div class="card-body">
           <div class="row">
             @csrf
@@ -40,14 +43,14 @@
             @endforeach
           </select>
             </div>
-            
+
              <div class="col-md-4">
               <label for="tipoPoliza">Tipo de poliza</label>
               <select id="tipoPoliza" name="tipoPoliza" class="form-control">
                  <option value="M">Multiple</option>
                 <option value="P">Personal</option>
                 <option selected  value="D">Daños a 3eros</option>
-               
+
           </select>
             </div>
             <div class="col-md-4">
@@ -68,14 +71,14 @@
                 <option value="4">4 año</option>
           </select>
             </div>
-               
+
             <div class="col-md-4">
               <label for="status">Status</label>
               <select id="status" name="status" class="form-control">
                 <option value="Vigente">Vigente</option>
                 <option value="Atrasado">Atrasado</option>
                 <option value="Cancelado">Cancelado</option>
-            
+
           </select>
             </div>
                 <div class="col-md-4">
@@ -111,15 +114,15 @@
             <div class="col-md-4">
               <label for="telefono">Telefono</label>
               <input id="telefono" type="text" placeholder="Telefono" class="form-control" name="telefono" maxlength="14" required="true" value="{{old('telefono')}}"  autofocus>
-            </div> 
+            </div>
             <div class="col-md-4">
               <label for="telefono_emergencia">Telefono de emergencia</label>
               <input id="telefono_emergencia" type="text" placeholder="telefono_emergencia" class="form-control" name="telefono_emergencia"  maxlength="14"  autofocus>
             </div>
-          
-            
-          
-     
+
+
+
+
             @include('modales.direcciones')
             @include('modales.vehiculos')
             @include('modales.licencias')
@@ -129,7 +132,7 @@
             </div>
             </div>
 
-          
+
           </div>
         </div>
         <div class="card-footer">
@@ -150,9 +153,6 @@
       <!-- formulario -->
     </div>
   </div>
-@endsection
+</x-app-layout>
 
-@push('js')
-
-  <script defer src="{{asset('public/js/cliente/cliente.js')}}"></script>
-@endpush
+  <script defer src="{{asset('js/cliente/cliente.js')}}"></script>

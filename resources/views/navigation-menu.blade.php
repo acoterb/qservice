@@ -18,6 +18,12 @@
                     <x-jet-nav-link href="{{ route('cobradores.index') }}" :active="request()->routeIs('cobradores.index')">
                         {{ __('Cobradores') }}
                     </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('vendedores.index') }}" :active="request()->routeIs('vendedores.index')">
+                        {{ __('Vendedores') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('cliente.index') }}" :active="request()->routeIs('cliente.index')">
+                        {{ __('Clientes') }}
+                    </x-jet-nav-link>
                 </div>
             </div>
 

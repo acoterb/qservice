@@ -13,15 +13,16 @@
                     <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
                         <div class="card-header">
                             <center>
-                                <h3>Crear Cobrador</h3>
+                                <h3>Editar Vendedor</h3>
                             </center>
                         </div>
-                        <form method="POST" action="{{ route('cobradores.store') }}" aria-label="{{ __('cobradores') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('vendedores.update',$vendedores->id) }}" aria-label="{{ __('vendedores') }}" enctype="multipart/form-data">
 
 
                             <div class="card-body">
                                 <div class="row">
                                     @csrf
+                                    @method('PUT')
                                     <div class="col-md-12">
                                         <br>
                                         <center>
@@ -29,17 +30,10 @@
                                         </center>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="paquete">Nombres</label>
-                                        <input id="nombre" type="text" placeholder="nombre" class="form-control" name="nombre" value="{{old('nombre')}}"  autofocus maxlength="30">
+                                        <label for="numero">numero</label>
+                                        <input id="numero" type="text" placeholder="numero" class="form-control" name="numero" value="{{$vendedores->numero}}"  autofocus maxlength="30">
                                     </div>
-                                    <div class="col-md-4">
-                                        <label for="zona">Zona</label>
-                                        <select id="zona" name="zona" class="form-control">
-                                            @foreach($zonas as $zona)
-                                                <option value="{{$zona->id}}">{{$zona->zona}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
 
 
 
@@ -54,7 +48,7 @@
                                         <button type="submit" id="guardar" class="btn btn-success">
                                             <i class="fas fa-save"></i>&nbsp;&nbsp;{{ __('Guardar') }}
                                         </button>
-                                        <a href="{{route('cobradores.index')}}">
+                                        <a href="{{route('vendedores.index')}}">
                                             <button type="button" class="btn btn-default" >
                                                 <i class="fas fa-undo-alt"></i>&nbsp;&nbsp;{{ __('Regresar') }}
                                             </button>

@@ -13,7 +13,7 @@
                     <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
                         <div class="card-header">
                             <center>
-                                <h3>Crear Vendedor</h3>
+                                <h3>Editar Cobrador</h3>
                             </center>
                         </div>
                         <form method="POST" action="{{ route('cobradores.update',$cobradores->id) }}" aria-label="{{ __('cobradores') }}" enctype="multipart/form-data">

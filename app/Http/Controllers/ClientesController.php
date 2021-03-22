@@ -54,17 +54,17 @@ class ClientesController extends Controller
         ->select('pagos.id','pagos.pagoinicial','pagos.fecha_siguiente_pago','pagos.numeropagos','pagos.costoservicio','pagos.pagosrealizados','pagos_detalles.num_pago','pagos_detalles.fecha_pago','pagos_detalles.cantidad')
         ->get();
         foreach ($pacientes as $key => $pacientes) {
-          
+
           $pacientes->fecha_siguiente_pago = Carbon::createFromFormat('Y-m-d',$pacientes->fecha_pago )->addDay(30)->toDateTimeString();
          $actualizar = Pagos::findorfail($pacientes->id);
           $actualizar->fecha_siguiente_pago = $pacientes->fecha_siguiente_pago;
         $actualizar->save();
 
         }
-        
+
 
           return redirect('/');
-          
+
 
     }
 
@@ -91,9 +91,9 @@ class ClientesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    
+
  {
-    
+
 //dd($request->fechaInicio);
     $ultimaPoliza =  new Contratos();
     $ultimaPoliza = $ultimaPoliza->all();
@@ -120,9 +120,9 @@ class ClientesController extends Controller
      {
                $poliza = "N°-".$request->tipoPoliza.substr($request->fechaInicio, 8).substr($request->fechaInicio, 5,-3)."0".intval(substr($request->fechaInicio,0,-8)+2)."Q".$request->vendedor."-0".intval($numConsecutivo+1);
      }
-     else 
+     else
      {
-        $poliza = "N°-".$request->tipoPoliza.substr($request->fechaInicio, 8).substr($request->fechaInicio, 5,-3)."0".intval(substr($request->fechaInicio,0,-8)+2)."Q".$request->vendedor."-".intval($numConsecutivo+1);   
+        $poliza = "N°-".$request->tipoPoliza.substr($request->fechaInicio, 8).substr($request->fechaInicio, 5,-3)."0".intval(substr($request->fechaInicio,0,-8)+2)."Q".$request->vendedor."-".intval($numConsecutivo+1);
      }
 
 
@@ -156,7 +156,7 @@ class ClientesController extends Controller
       $cliente ->telefono = $request->telefono;
       $cliente ->telefono_emergencia = $request->telefono_emergencia;
       $cliente ->direccions_id = $direccion->id;
-      $cliente ->save(); 
+      $cliente ->save();
 
       $licencia = new Licencia();
       $licencia ->nlicencia = $request->licencia;
@@ -182,10 +182,6 @@ class ClientesController extends Controller
       $contrato ->observacion_privada = $request->observacionesPrivada;
       $contrato ->usuario = Auth::user()->id;
       $contrato -> save();
-      
-
-
- 
 
 
 
@@ -207,16 +203,11 @@ class ClientesController extends Controller
       $pagoFecha = new Pagos_fecha();
       $pagoFecha ->contrato_id = $contrato->id;
       $pagoFecha ->num_pago = $i;
-      $pagoFecha ->fecha_pago = date("Y-m-d",strtotime($request->fechaInicio."+".$i." month")); 
+      $pagoFecha ->fecha_pago = date("Y-m-d",strtotime($request->fechaInicio."+".$i." month"));
       $pagoFecha ->usuario_id = 0;
       $pagoFecha ->save();
 
     }
-      $logs = new Logs();
-      $logs ->usuario = Auth::user()->name;
-      $logs ->movimiento = "Se creo el siguiente contrato  ". $contrato->poliza;
-      $logs ->save();
-            Session::flash('flash_message', ' Cliente agregado correctamente');
               return redirect('cliente');
     }
 
@@ -230,7 +221,7 @@ class ClientesController extends Controller
     {
 
           $contrato = Contratos::findorfail($id);
-          $cliente = Cliente::where('id', $contrato->cliente_id)->first(); 
+          $cliente = Cliente::where('id', $contrato->cliente_id)->first();
           $direccion = Direccion::where('id',$cliente->direccions_id)->first();
 
           return view('clientes.show',compact('contrato','direccion'));
@@ -241,7 +232,7 @@ class ClientesController extends Controller
     {
 
           $contrato = Contratos::findorfail($id);
-          $cliente = Cliente::where('id', $contrato->cliente_id)->first(); 
+          $cliente = Cliente::where('id', $contrato->cliente_id)->first();
           $direccion = Direccion::where('id',$cliente->direccions_id)->first();
           $vehiculo = Vehiculos::where('id',$contrato->vehiculo_id)->first();
           $licencia = Licencia::where('id',$contrato->licencia_id)->first();
@@ -254,13 +245,13 @@ class ClientesController extends Controller
     {
         return view('clientes.poliza',compact('contrato','direccion','vehiculo','licencia','pagos'));
     }
-          
+
     }
        public function polizaEpson230($id)
     {
 
           $contrato = Contratos::findorfail($id);
-          $cliente = Cliente::where('id', $contrato->cliente_id)->first(); 
+          $cliente = Cliente::where('id', $contrato->cliente_id)->first();
           $direccion = Direccion::where('id',$cliente->direccions_id)->first();
           $vehiculo = Vehiculos::where('id',$contrato->vehiculo_id)->first();
           $licencia = Licencia::where('id',$contrato->licencia_id)->first();
@@ -286,7 +277,7 @@ class ClientesController extends Controller
     {
 
 
-      
+
       $cliente = Contratos::findorfail($id);
       $clientes = Cliente::findorfail($cliente->cliente_id);
       $pagos = Pagos::where('contrato_id',$cliente->id)->first();
@@ -294,7 +285,7 @@ class ClientesController extends Controller
       $pagosDetalle2 = Pagos_detalle::where('pago_id',$pagos->id)->where('num_pago','2')->first();
       $pagosDetalle3 = Pagos_detalle::where('pago_id',$pagos->id)->where('num_pago','3')->first();
       $pagosDetalle4 = Pagos_detalle::where('pago_id',$pagos->id)->where('num_pago','4')->first();
-      
+
       $pagosFecha1 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','1')->first();
       $pagosFecha2 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','2')->first();
       $pagosFecha3 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','3')->first();
@@ -303,13 +294,13 @@ class ClientesController extends Controller
       $vendedor = $vendedor->all();
       $cobrador = new Cobradore();
       $cobrador = $cobrador->all();
-      
+
       $grua = Grua::where('contrato_id',$cliente->id)->first();
       if($grua == null)
       {
         $grua = new Grua;
       }
-      
+
        return view('clientes.edit',compact('vendedor','cobrador','cliente','clientes','pagos','pagosDetalle1','pagosDetalle2','pagosDetalle3','pagosDetalle4','grua','pagosFecha1','pagosFecha2','pagosFecha3','pagosFecha4'));
     }
 
@@ -327,11 +318,11 @@ class ClientesController extends Controller
             abort(403, "¡No tienes Permiso para usar este modulo!");
         }
       $contrato = Contratos::findorfail($id);
-         
+
       if( Auth::user()->rol == 1 ||  Auth::user()->rol == 2)
       {
-        
-    
+
+
       $contrato ->status_id = $request->status;
       $contrato ->poliza = $request->poliza;
 
@@ -360,7 +351,7 @@ class ClientesController extends Controller
       $cliente ->apellidos = $request->Apellidos;
       $cliente ->telefono = $request->telefono;
       $cliente ->telefono_emergencia = $request->telefono_emergencia;
-      $cliente ->save(); 
+      $cliente ->save();
 
        $direccion = Direccion::findorfail($cliente ->direccions_id);
       $direccion ->calle = $request->calle;
@@ -385,7 +376,7 @@ class ClientesController extends Controller
       $contrato ->observaciones = $request->observaciones;
       $contrato ->observacion_privada = $request->observacionesPrivada;
       $contrato -> save();
-      
+
       $grua = Grua::where('contrato_id',$contrato->id)->first();
        if ($grua == null)
     {
@@ -399,7 +390,7 @@ class ClientesController extends Controller
     }
     else
     {
-    
+
       $grua ->disponible = $request->disponible_grua;
       $grua ->fecha_uso = $request->fecha_uso;
       $grua ->lugar_compustura = $request->lugar_compustura;
@@ -411,7 +402,7 @@ class ClientesController extends Controller
       $pago = Pagos::where('contrato_id', $contrato->id)->first();
       $pago ->numeropagos = $request->plazoP;
       $pago ->costoservicio = $request->costo;
-     
+
     if($request->pago1FechaPropuesta)
     {
      $pagoFecha =  Pagos_fecha::where('contrato_id',$contrato->id)->where('num_pago','1')->first();
@@ -420,7 +411,7 @@ class ClientesController extends Controller
      $pagoFecha ->fecha_pago = $request->pago1FechaPropuesta;
      $pagoFecha ->usuario_id =   Auth::user()->id;
      $pagoFecha ->save();
-     
+
      }
      else
      {
@@ -432,7 +423,7 @@ class ClientesController extends Controller
      $pagoFecha ->save();
     }
     }
-    
+
     if($request->pago2FechaPropuesta)
     {
      $pagoFecha =  Pagos_fecha::where('contrato_id',$contrato->id)->where('num_pago','2')->first();
@@ -452,7 +443,7 @@ class ClientesController extends Controller
      $pagoFecha ->save();
     }
     }
-    
+
         if($request->pago3FechaPropuesta)
     {
      $pagoFecha =  Pagos_fecha::where('contrato_id',$contrato->id)->where('num_pago','3')->first();
@@ -472,7 +463,7 @@ class ClientesController extends Controller
      $pagoFecha ->save();
     }
     }
-    
+
         if($request->pago4FechaPropuesta)
     {
      $pagoFecha =  Pagos_fecha::where('contrato_id',$contrato->id)->where('num_pago','4')->first();
@@ -492,8 +483,8 @@ class ClientesController extends Controller
      $pagoFecha ->save();
     }
     }
-    
-    
+
+
 
 
       $pagosDetalle1 = Pagos_detalle::where('pago_id',$pago->id)->where('num_pago','1')->first();
@@ -511,8 +502,8 @@ class ClientesController extends Controller
         $pagosDetalle1->save();
       }
       else if(!$pagosDetalle1 && $request->pago1 == 1)
-      { 
-        
+      {
+
 
 
         $pagosDetalle1 = new Pagos_detalle();
@@ -523,7 +514,7 @@ class ClientesController extends Controller
         $pagosDetalle1->concepto = $request->concepto1;
         $pagosDetalle1 ->usuario = Auth::user()->id;
         $pagosDetalle1->save();
-        
+
       }
        if($pagosDetalle2)
       {
@@ -534,7 +525,7 @@ class ClientesController extends Controller
         $pagosDetalle2->save();
       }
       else if(!$pagosDetalle2 && $request->pago2 == 1)
-      { 
+      {
         $pagosDetalle2 = new Pagos_detalle();
         $pagosDetalle2->pago_id = $pago->id;
         $pagosDetalle2->num_pago = 2;
@@ -544,7 +535,7 @@ class ClientesController extends Controller
         $pagosDetalle2 ->usuario = Auth::user()->id;
         $pagosDetalle2->save();
       }
-       
+
       if($pagosDetalle3)
       {
         $pagosDetalle3->fecha_pago = $request->pago3Fecha;
@@ -554,7 +545,7 @@ class ClientesController extends Controller
         $pagosDetalle3->save();
       }
       else if(!$pagosDetalle3 && $request->pago3 == 1)
-      { 
+      {
         $pagosDetalle3 = new Pagos_detalle();
         $pagosDetalle3->pago_id = $pago->id;
         $pagosDetalle3->num_pago = 3;
@@ -570,11 +561,11 @@ class ClientesController extends Controller
         $pagosDetalle4->fecha_pago = $request->pago4Fecha;
         $pagosDetalle4->cantidad = $request->pago4Cantidad;
         $pagosDetalle4->concepto = $request->concepto4;
-        $pagosDetalle4 ->usuario = Auth::user()->id;        
+        $pagosDetalle4 ->usuario = Auth::user()->id;
         $pagosDetalle4->save();
       }
       else if(!$pagosDetalle4 && $request->pago4 == 1)
-      { 
+      {
         $pagosDetalle4 = new Pagos_detalle();
         $pagosDetalle4->pago_id = $pago->id;
         $pagosDetalle4->num_pago = 4;
@@ -596,14 +587,14 @@ class ClientesController extends Controller
       $logs ->usuario = Auth::user()->name;
       $logs ->movimiento = "Se modifico el siguiente contrato  ". $contrato->poliza;
       $logs ->save();
-           
+
                }
                else
                {
                   $pago = Pagos::where('contrato_id', $contrato->id)->first();
       $pago ->numeropagos = $request->plazoP;
       $pago ->costoservicio = $request->costo;
-     
+
 
 
 
@@ -622,8 +613,8 @@ class ClientesController extends Controller
         $pagosDetalle1->save();
       }
       else if(!$pagosDetalle1 && $request->pago1 == 1)
-      { 
-        
+      {
+
 
 
         $pagosDetalle1 = new Pagos_detalle();
@@ -634,7 +625,7 @@ class ClientesController extends Controller
         $pagosDetalle1->concepto = $request->concepto1;
         $pagosDetalle1 ->usuario = Auth::user()->id;
         $pagosDetalle1->save();
-        
+
       }
        if($pagosDetalle2)
       {
@@ -645,7 +636,7 @@ class ClientesController extends Controller
         $pagosDetalle2->save();
       }
       else if(!$pagosDetalle2 && $request->pago2 == 1)
-      { 
+      {
         $pagosDetalle2 = new Pagos_detalle();
         $pagosDetalle2->pago_id = $pago->id;
         $pagosDetalle2->num_pago = 2;
@@ -655,7 +646,7 @@ class ClientesController extends Controller
         $pagosDetalle2 ->usuario = Auth::user()->id;
         $pagosDetalle2->save();
       }
-       
+
       if($pagosDetalle3)
       {
         $pagosDetalle3->fecha_pago = $request->pago3Fecha;
@@ -665,7 +656,7 @@ class ClientesController extends Controller
         $pagosDetalle3->save();
       }
       else if(!$pagosDetalle3 && $request->pago3 == 1)
-      { 
+      {
         $pagosDetalle3 = new Pagos_detalle();
         $pagosDetalle3->pago_id = $pago->id;
         $pagosDetalle3->num_pago = 3;
@@ -685,7 +676,7 @@ class ClientesController extends Controller
         $pagosDetalle4->save();
       }
       else if(!$pagosDetalle4 && $request->pago4 == 1)
-      { 
+      {
         $pagosDetalle4 = new Pagos_detalle();
         $pagosDetalle4->pago_id = $pago->id;
         $pagosDetalle4->num_pago = 4;
@@ -703,12 +694,9 @@ class ClientesController extends Controller
 
       $pago ->save();
 
-      $logs = new Logs();
-      $logs ->usuario = Auth::user()->name;
-      $logs ->movimiento = "Se agregaron pagos al siguiente contrato  ". $contrato->poliza;
-      $logs ->save();
+
                }
-                Session::flash('flash_message', ' Cliente Editado correctamente');
+
               return redirect('cliente');
     }
 
