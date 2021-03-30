@@ -1,9 +1,9 @@
-@extends('admin.layouts.menu')
-
-@section('breadcrumb')
-  <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
-@endsection
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
     <div class="col-md-12 text-center">
       <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
         <div class="card-header">
@@ -27,7 +27,7 @@
                   <tr>
 
                       <td>{{$user->name}}</td>
-                      <td>{{$user->usuario}}</td>
+                      <td>{{$user->username}}</td>
                       <td>
                         <a href="{{route('usuarios.edit',$user->id)}}">
                           <button class="btn btn-primary">
@@ -35,12 +35,25 @@
                           </button>
                         </a>
                       </td>
-                      <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal" value="{{route('usuarios.destroy',$user->id)}}"
-                          onclick="$('#destroyconfirm').attr('action',this.value);">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
+                      @can('usuarios_destroy')
+                          <td>
+                              <form method="POST" id="formEliminar" action="" aria-label="{{ __('Usuario') }}" enctype="multipart/form-data">
+                                  @csrf
+                                  @method('DELETE')
+                                  <button type="button" id="borrar" value="{{ route('usuarios.destroy',$user->id) }}" name="borrar" class="btn btn-danger"
+                                          onclick="  var r = confirm('Estas seguro que deseas Eliminarlo?');
+                            if (r == true) {
+
+                            $('#formEliminar').attr('action',this.value).submit();
+
+                            } else {
+                            return false;
+                            }">
+                                      <i class="fas fa-trash-alt"></i>
+                                  </button>
+                              </form>
+                          </td>
+                      @endcan
                   </tr>
                      @endforeach
 
@@ -49,12 +62,7 @@
         </div>
       </div>
     </div>
-
-
-@endsection
-
-
-@push('js')
+</x-app-layout>
 
   <script defer src="{{asset('public/js/jquery/jquery.dataTables.min.js')}}" ></script>
   <script defer src="{{asset('public/js/jquery/dataTables.bootstrap4.min.js')}}" ></script>
@@ -90,4 +98,4 @@
         } );
 
     </script>
-@endpush
+

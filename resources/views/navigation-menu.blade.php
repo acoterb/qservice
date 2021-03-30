@@ -15,15 +15,31 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
+                    @can('cobradores_view')
                     <x-jet-nav-link href="{{ route('cobradores.index') }}" :active="request()->routeIs('cobradores.index')">
                         {{ __('Cobradores') }}
                     </x-jet-nav-link>
+                    @endcan
+                    @can('vendedor_view')
                     <x-jet-nav-link href="{{ route('vendedores.index') }}" :active="request()->routeIs('vendedores.index')">
                         {{ __('Vendedores') }}
                     </x-jet-nav-link>
+                    @endcan
+                    @can('clientes_view')
                     <x-jet-nav-link href="{{ route('cliente.index') }}" :active="request()->routeIs('cliente.index')">
                         {{ __('Clientes') }}
                     </x-jet-nav-link>
+                    @endcan
+                    @can('usuarios_view')
+                    <x-jet-nav-link href="{{ route('usuarios.index') }}" :active="request()->routeIs('usuarios.index')">
+                        {{ __('Usuarios') }}
+                    </x-jet-nav-link>
+                        @endcan
+                    @can('choques_view')
+                        <x-jet-nav-link href="{{ route('choques.index') }}" :active="request()->routeIs('choques.index')">
+                            {{ __('Choques') }}
+                        </x-jet-nav-link>
+                    @endcan
                 </div>
             </div>
 

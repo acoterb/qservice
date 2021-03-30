@@ -4,9 +4,21 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:usuarios_view')->only('index');
+        $this->middleware('can:usuarios_create')->only('create');
+        $this->middleware('can:usuarios_create')->only('store');
+        $this->middleware('can:usuarios_edit')->only('edit');
+        $this->middleware('can:usuarios_edit')->only('update');
+        $this->middleware('can:usuarios_destroy')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,10 +26,7 @@ class UserController extends Controller
      */
     public function index()
     {
-                       if(Auth::user()->rol != 1)
-      {
-        abort(403, "¡No tienes Permiso para usar este modulo!");
-      }
+
                 $user = new User();
                 $user = $user->all();
                 return view('usuarios.index', compact('user'));
@@ -29,12 +38,12 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    { 
-        if(Auth::user()->rol != 1)
-      {
-        abort(403, "¡No tienes Permiso para usar este modulo!");
-      }
-        return view('usuarios.createEdit');
+    {
+
+
+        $roles  = new Role();
+        $roles = $roles->all();
+        return view('usuarios.create',compact('roles'));
     }
 
     /**
@@ -44,20 +53,16 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
-         if(Auth::user()->rol != 1)
-      {
-        abort(403, "¡No tienes Permiso para usar este modulo!");
-      }
+    {
+
         $user = new User();
         $user->name =  $request->name;
-        $user->apellidos =  $request->apellidos;
-        $user->rol =  $request->rol;
-        $user->usuario =  $request->usuario;
-        $user->status =  1;
-        $user->password = bcrypt($request->password);
+        $user->username =  $request->username;
+        $user->password = Hash::make($request->password);
+        $user->usuario_creo = Auth::user()->id;
         $user->save();
-        
+        $userRol = User::find($user->id);
+        $userRol->assignRole($request->rol);
      return redirect('/usuarios');
     }
 
@@ -69,13 +74,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        
-        if (Auth::user()->id != $id)
-        {
-        abort(403, "¡Pillin! solo puedes modificar tu perfil");
-      }
+
         $usuarios = User::findorfail($id);
-         
+
           return view('usuarios.perfil',compact('usuarios'));
     }
 
@@ -87,13 +88,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-            if(Auth::user()->rol != 1)
-      {
-        abort(403, "¡No tienes Permiso para usar este modulo!");
-      }
+        $roles  = new Role();
+        $roles = $roles->all();
          $usuarios = User::findorfail($id);
-         
-          return view('usuarios.createEdit',compact('usuarios'));
+
+          return view('usuarios.edit',compact('usuarios','roles'));
     }
 
     /**
@@ -108,27 +107,17 @@ class UserController extends Controller
 
         $usuarios = User::findorfail($id);
         $usuarios->name =  $request->name;
-        $usuarios->apellidos =  $request->apellidos;
-        if ($request->rol)
-        {
-          $usuarios->rol =  $request->rol;
-        }
-        if ($request->usuario)
-        {
-            $usuarios->usuario =  $request->usuario;
-        }
-        
-        $usuarios->status =  1;
         if ($request->password)
         {
-           $usuarios->password = bcrypt($request->password);  
+           $usuarios->password = Hash::make($request->password);
         }
-
-       
+        $usuarios->ultimo_usuario_modifico = Auth::user()->id;
         $usuarios->save();
-        
-       return redirect('/home');
-        
+        DB::table('model_has_roles')->where('model_id', $usuarios->id)->delete();
+        $user = User::find($usuarios->id);
+        $user->assignRole($request->rol);
+       return redirect('/usuarios');
+
     }
 
     /**
@@ -139,6 +128,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cliente = User::findorfail($id);
+        $cliente->usuario_elimino = Auth::user()->id;
+        $cliente->save();
+        $cliente->delete();
+        return redirect('usuarios');
     }
 }

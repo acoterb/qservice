@@ -230,7 +230,7 @@
               @endif
             </div>
 
-            @if(Auth::user()->rol == 1 || Auth::user()->rol == 2)
+
              <div class="col-md-12">
               <br>
               <center>
@@ -419,129 +419,15 @@
             @endif
                  </div>
 
-            @else
-             <div class="col-md-12">
-              <br>
-              <center>
-                <h4>Informacion general</h4>
-              </center>
-            </div>
 
-            <div class="col-md-4">
-              <label for="vendedor">Vendedor</label>
-          <select id="vendedor" name="vendedor" class="form-control">
-            <option selected="" value="{{$cliente->vendedor_id}}">{{$cliente->vendedor_id}}</option>
-          </select>
-            </div>
-            <div class="col-md-4">
-              <label for="cobrador">Cobrador</label>
-               <select id="cobrador" name="cobrador" class="form-control">
-                 <option selected="" value="{{$cliente->cobrador_id}}">{{$cliente->cobrador_id}}</option>
-               </select>
-            </div>
-
-             <div class="col-md-4">
-              <label for="tipoPoliza">Tipo de poliza</label>
-              <select id="tipoPoliza" name="tipoPoliza" class="form-control">
-                @if($cliente->tipo == 'P')
-                <option selected="" value="P">Personal</option>
-
-                @else
-
-                <option selected="" value="M">Multiple</option>
-                @endif
-          </select>
-
-            </div>
-            <div class="col-md-4">
-                    <label for="fechaInicio">Fecha de inicio de vigencia de poliza</label>
-                    <input type="date" id="fechaInicio" name="fechaInicio" value="{{$cliente->desde}}" class="form-control" readonly>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="fechaFin">Fecha de Fin de vigencia de poliza</label>
-                    <input type="date" id="hasta" name="hasta" value="{{$cliente->hasta}}" class="form-control" readonly>
-                  </div>
-              <div class="col-md-4">
-              <label for="plazo">Plazo</label>
-              <select id="plazo" name="plazo" class="form-control">
-                <option value="{{$cliente->plazo}}">{{$cliente->plazo}} año</option>
-              </select>
-            </div>
-               <div class="col-md-4">
-              <label for="poliza">Poliza</label>
-              <input id="poliza" type="text" placeholder="poliza" class="form-control" name="poliza" value="{{$cliente->poliza}}" required readonly autofocus>
-            </div>
-            <div class="col-md-4">
-              <label for="status">Status</label>
-              <select id="status" name="status" class="form-control">
-                @if($cliente->status_id == 'Vigente')
-                  <option selected="" value="Vigente">Vigente</option>
-                  <option value="Atrasado">Atrasado</option>
-                  <option value="Cancelado">Cancelado</option>
-                  <option value="Caida">Caida</option>
-                @elseif($cliente->status_id == 'Atrasado')
-                  <option value="Vigente">Vigente</option>
-                  <option selected=""  value="Atrasado">Atrasado</option>
-                  <option value="Cancelado">Cancelado</option>
-                  <option value="Caida">Caida</option>
-                 @elseif($cliente->status_id == 'Cancelado')
-                  <option value="Vigente">Vigente</option>
-                  <option value="Atrasado">Atrasado</option>
-                  <option selected="" value="Cancelado">Cancelado</option>
-                  <option value="Caida">Caida</option>
-                  @else
-                <option value="Vigente">Vigente</option>
-                  <option value="Atrasado">Atrasado</option>
-                  <option value="Cancelado">Cancelado</option>
-                  <option selected="" value="Caida">Caida</option>
-                @endif
-          </select>
-            </div>
-            <div class="col-md-4">
-              <label for="plazo de pagos">Plazo de pagos</label>
-              <select id="plazoP" name="plazoP" class="form-control">
-                @if($cliente->plazo == 1)
-                <option value="1">De contado</option>
-                <option value="2">4 pagos</option>
-                @else
-                <option value="1">De contado</option>
-                <option selected="" value="2">4 pagos</option>
-                @endif
-
-          </select>
-            </div>
-                     <div class="col-md-12">
-              <label for="observaciones">Observaciones</label>
-             <textarea class="form-control notemptyField" rows="5" id="observaciones" name="observaciones"  >{{$cliente->observaciones}}</textarea>
-            </div>
-            <div class="col-md-4">
-              <label for="nombre">Nombre</label>
-              <input id="nombre" type="text" placeholder="Nombre" class="form-control" name="nombre" value="{{$cliente->contrato->nombres}}" required autofocus readonly maxlength="30">
-            </div>
-            <div class="col-md-4">
-              <label for="apellido_paterno">Apellidos</label>
-              <input id="apellido_paterno" type="text" placeholder="Apellidos" class="form-control" name="Apellidos" value="{{$cliente->contrato->apellidos}}" maxlength="35" readonly autofocus>
-            </div>
-            <div class="col-md-4">
-              <label for="telefono">Telefono</label>
-              <input id="telefono" type="text" placeholder="Telefono" class="form-control" name="telefono" value="{{$cliente->contrato->telefono}}" required readonly autofocus>
-            </div>
-                <div class="col-md-4">
-              <label for="telefono_emergencia">Telefono de emergencia</label>
-              <input id="telefono_emergencia" type="text" placeholder="telefono_emergencia" class="form-control" name="telefono_emergencia"   value="{{$cliente->contrato->telefono_emergencia}}" readonly autofocus>
-            </div>
-            @include('modales.direcciones')
-            @include('modales.vehiculos')
-            @include('modales.licencias')
-            </div>
-
-            @endif
         <div class="card-footer">
           <div class="col-md-12">
             <center>
+                @can('clientes_edit')
               <button type="submit" class="btn btn-success">
                 <i class="fas fa-save"></i>&nbsp;&nbsp;{{ __('Guardar') }}
               </button>
+                @endcan
               <a href="{{route('cliente.index')}}">
                 <button type="button" class="btn btn-default" >
                   <i class="fas fa-undo-alt"></i>&nbsp;&nbsp;{{ __('Regresar') }}
@@ -560,14 +446,3 @@
 <script defer src="{{asset('public/js/cliente/cliente.js')}}"></script>
 
 
-@if(Auth::user()->rol == 4)
-
-<script defer src="{{asset('public/js/cliente/cliente.js')}}"></script>
-   <script type="text/javascript">
-     $(document).ready(function() {
-         $(':input').attr('readonly',true);
-
-         })
-</script>
-
-@endif

@@ -1,6 +1,9 @@
-@extends('admin.layouts.menu')
-
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
   <div class="col-md-12">
     <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
       <div class="card-header">
@@ -9,13 +12,13 @@
         </center>
       </div>
 
-        
+
       <form method="POST" action="{{ route('choques.store') }}" aria-label="{{ __('Clientes') }}" enctype="multipart/form-data">
 
         @csrf
 
-        
-      
+
+
         <div class="card-body">
           <div class="row">
             <input type="hidden" name="contrato_id" value="{{$poliza->cliente_id}}">
@@ -36,7 +39,7 @@
              <div class="col-md-4">
               <label for="fechaChoque">fecha del Choque</label>
               <input id="fechaChoque" type="date"  class="form-control" name="fechaChoque" value="{{$poliza->num_choques}}" required="true" autofocus="true">
-            </div>  
+            </div>
                <div class="col-md-4">
                <label for="juridico">Mandar a juridico</label>
               <select id="juridico" name="juridico" class="form-control">
@@ -50,9 +53,9 @@
              <textarea class="form-control notemptyField" rows="5" id="descripcion" name="descripcion" ></textarea>
             </div>
 
-       
-          
-     
+
+
+
       </div>
             </div>
         <div class="card-footer">
@@ -69,10 +72,10 @@
             </center>
           </div>
         </div>
-   
+
       </form>
 
       <!-- formulario -->
     </div>
   </div>
-@endsection
+</x-app-layout>

@@ -32,6 +32,14 @@ class ClientesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('can:clientes_view')->only('index');
+        $this->middleware('can:clientes_create')->only('create');
+        $this->middleware('can:clientes_create')->only('store');
+        $this->middleware('can:clientes_edit')->only('update');
+        $this->middleware('can:clientes_destroy')->only('destroy');
+    }
     public function index()
     {
                 $clientes = new Contratos();
@@ -181,6 +189,7 @@ class ClientesController extends Controller
       $contrato ->observaciones = $request->observaciones;
       $contrato ->observacion_privada = $request->observacionesPrivada;
       $contrato ->usuario = Auth::user()->id;
+      $contrato->usuario_creo = Auth::user()->id;
       $contrato -> save();
 
 
@@ -196,6 +205,7 @@ class ClientesController extends Controller
       $pagoDetalle = new Pagos_detalle();
       $pagoDetalle ->pago_id = $pago->id;
       $pagoDetalle ->usuario = Auth::user()->id;
+      $pagoDetalle->usuario_creo = Auth::user()->id;
       $pagoDetalle ->save();
 
     for($i = 1 ; $i <= $request->plazoP; $i++)
@@ -313,14 +323,10 @@ class ClientesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if( Auth::user()->rol == 4)
-        {
-            abort(403, "¡No tienes Permiso para usar este modulo!");
-        }
+
       $contrato = Contratos::findorfail($id);
 
-      if( Auth::user()->rol == 1 ||  Auth::user()->rol == 2)
-      {
+
 
 
       $contrato ->status_id = $request->status;
@@ -375,6 +381,7 @@ class ClientesController extends Controller
       $contrato ->navidena = $request->navideno;
       $contrato ->observaciones = $request->observaciones;
       $contrato ->observacion_privada = $request->observacionesPrivada;
+      $contrato->ultimo_usuario_modifico = Auth::user()->id;
       $contrato -> save();
 
       $grua = Grua::where('contrato_id',$contrato->id)->first();
@@ -498,7 +505,7 @@ class ClientesController extends Controller
         $pagosDetalle1->fecha_pago = $request->pago1Fecha;
         $pagosDetalle1->cantidad = $request->pago1Cantidad;
         $pagosDetalle1->concepto = $request->concepto1;
-        $pagosDetalle1 ->usuario = Auth::user()->id;
+        $pagosDetalle1->ultimo_usuario_modifico = Auth::user()->id;
         $pagosDetalle1->save();
       }
       else if(!$pagosDetalle1 && $request->pago1 == 1)
@@ -512,7 +519,7 @@ class ClientesController extends Controller
         $pagosDetalle1->fecha_pago = $request->pago1Fecha;
         $pagosDetalle1->cantidad = $request->pago1Cantidad;
         $pagosDetalle1->concepto = $request->concepto1;
-        $pagosDetalle1 ->usuario = Auth::user()->id;
+        $pagosDetalle1->usuario_creo = Auth::user()->id;
         $pagosDetalle1->save();
 
       }
@@ -521,7 +528,7 @@ class ClientesController extends Controller
         $pagosDetalle2->fecha_pago = $request->pago2Fecha;
         $pagosDetalle2->cantidad = $request->pago2Cantidad;
         $pagosDetalle2->concepto = $request->concepto2;
-        $pagosDetalle2 ->usuario = Auth::user()->id;
+        $pagosDetalle2->ultimo_usuario_modifico = Auth::user()->id;
         $pagosDetalle2->save();
       }
       else if(!$pagosDetalle2 && $request->pago2 == 1)
@@ -532,7 +539,7 @@ class ClientesController extends Controller
         $pagosDetalle2->fecha_pago = $request->pago2Fecha;
         $pagosDetalle2->cantidad = $request->pago2Cantidad;
         $pagosDetalle2->concepto = $request->concepto2;
-        $pagosDetalle2 ->usuario = Auth::user()->id;
+        $pagosDetalle2 ->usuario_creo = Auth::user()->id;
         $pagosDetalle2->save();
       }
 
@@ -541,7 +548,7 @@ class ClientesController extends Controller
         $pagosDetalle3->fecha_pago = $request->pago3Fecha;
         $pagosDetalle3->cantidad = $request->pago3Cantidad;
         $pagosDetalle3->concepto = $request->concepto3;
-        $pagosDetalle3 ->usuario = Auth::user()->id;
+        $pagosDetalle3 ->ultimo_usuario_modifico = Auth::user()->id;
         $pagosDetalle3->save();
       }
       else if(!$pagosDetalle3 && $request->pago3 == 1)
@@ -552,7 +559,7 @@ class ClientesController extends Controller
         $pagosDetalle3->fecha_pago = $request->pago3Fecha;
         $pagosDetalle3->cantidad = $request->pago3Cantidad;
         $pagosDetalle3->concepto = $request->concepto3;
-        $pagosDetalle3 ->usuario = Auth::user()->id;
+        $pagosDetalle3 ->usuario_creo = Auth::user()->id;
         $pagosDetalle3->save();
       }
 
@@ -561,7 +568,7 @@ class ClientesController extends Controller
         $pagosDetalle4->fecha_pago = $request->pago4Fecha;
         $pagosDetalle4->cantidad = $request->pago4Cantidad;
         $pagosDetalle4->concepto = $request->concepto4;
-        $pagosDetalle4 ->usuario = Auth::user()->id;
+        $pagosDetalle4 ->ultimo_usuario_modifico = Auth::user()->id;
         $pagosDetalle4->save();
       }
       else if(!$pagosDetalle4 && $request->pago4 == 1)
@@ -572,118 +579,7 @@ class ClientesController extends Controller
         $pagosDetalle4->fecha_pago = $request->pago4Fecha;
         $pagosDetalle4->cantidad = $request->pago4Cantidad;
         $pagosDetalle4->concepto = $request->concepto4;
-        $pagosDetalle4 ->usuario = Auth::user()->id;
-        $pagosDetalle4->save();
-      }
-
-
-      $pago ->pagosrealizados = count(Pagos_detalle::where('pago_id',$pago->id)->get());
-      $pago ->pagoinicial = $request->pagoInicial;
-      $pago ->numeropagos = $request->numPagos;
-
-      $pago ->save();
-
-      $logs = new Logs();
-      $logs ->usuario = Auth::user()->name;
-      $logs ->movimiento = "Se modifico el siguiente contrato  ". $contrato->poliza;
-      $logs ->save();
-
-               }
-               else
-               {
-                  $pago = Pagos::where('contrato_id', $contrato->id)->first();
-      $pago ->numeropagos = $request->plazoP;
-      $pago ->costoservicio = $request->costo;
-
-
-
-
-      $pagosDetalle1 = Pagos_detalle::where('pago_id',$pago->id)->where('num_pago','1')->first();
-      $pagosDetalle2 = Pagos_detalle::where('pago_id',$pago->id)->where('num_pago','2')->first();
-      $pagosDetalle3 = Pagos_detalle::where('pago_id',$pago->id)->where('num_pago','3')->first();
-      $pagosDetalle4 = Pagos_detalle::where('pago_id',$pago->id)->where('num_pago','4')->first();
-
-
-      if($pagosDetalle1)
-      {
-        $pagosDetalle1->fecha_pago = $request->pago1Fecha;
-        $pagosDetalle1->cantidad = $request->pago1Cantidad;
-        $pagosDetalle1->concepto = $request->concepto1;
-        $pagosDetalle1 ->usuario = Auth::user()->id;
-        $pagosDetalle1->save();
-      }
-      else if(!$pagosDetalle1 && $request->pago1 == 1)
-      {
-
-
-
-        $pagosDetalle1 = new Pagos_detalle();
-        $pagosDetalle1->pago_id = $pago->id;
-        $pagosDetalle1->num_pago = 1;
-        $pagosDetalle1->fecha_pago = $request->pago1Fecha;
-        $pagosDetalle1->cantidad = $request->pago1Cantidad;
-        $pagosDetalle1->concepto = $request->concepto1;
-        $pagosDetalle1 ->usuario = Auth::user()->id;
-        $pagosDetalle1->save();
-
-      }
-       if($pagosDetalle2)
-      {
-        $pagosDetalle2->fecha_pago = $request->pago2Fecha;
-        $pagosDetalle2->cantidad = $request->pago2Cantidad;
-        $pagosDetalle2->concepto = $request->concepto2;
-        $pagosDetalle2 ->usuario = Auth::user()->id;
-        $pagosDetalle2->save();
-      }
-      else if(!$pagosDetalle2 && $request->pago2 == 1)
-      {
-        $pagosDetalle2 = new Pagos_detalle();
-        $pagosDetalle2->pago_id = $pago->id;
-        $pagosDetalle2->num_pago = 2;
-        $pagosDetalle2->fecha_pago = $request->pago2Fecha;
-        $pagosDetalle2->cantidad = $request->pago2Cantidad;
-        $pagosDetalle2->concepto = $request->concepto2;
-        $pagosDetalle2 ->usuario = Auth::user()->id;
-        $pagosDetalle2->save();
-      }
-
-      if($pagosDetalle3)
-      {
-        $pagosDetalle3->fecha_pago = $request->pago3Fecha;
-        $pagosDetalle3->cantidad = $request->pago3Cantidad;
-        $pagosDetalle3->concepto = $request->concepto3;
-        $pagosDetalle3 ->usuario = Auth::user()->id;
-        $pagosDetalle3->save();
-      }
-      else if(!$pagosDetalle3 && $request->pago3 == 1)
-      {
-        $pagosDetalle3 = new Pagos_detalle();
-        $pagosDetalle3->pago_id = $pago->id;
-        $pagosDetalle3->num_pago = 3;
-        $pagosDetalle3->fecha_pago = $request->pago3Fecha;
-        $pagosDetalle3->cantidad = $request->pago3Cantidad;
-        $pagosDetalle3->concepto = $request->concepto3;
-        $pagosDetalle3 ->usuario = Auth::user()->id;
-        $pagosDetalle3->save();
-      }
-
-      if($pagosDetalle4)
-      {
-        $pagosDetalle4->fecha_pago = $request->pago4Fecha;
-        $pagosDetalle4->cantidad = $request->pago4Cantidad;
-        $pagosDetalle4->concepto = $request->concepto4;
-        $pagosDetalle4 ->usuario = Auth::user()->id;
-        $pagosDetalle4->save();
-      }
-      else if(!$pagosDetalle4 && $request->pago4 == 1)
-      {
-        $pagosDetalle4 = new Pagos_detalle();
-        $pagosDetalle4->pago_id = $pago->id;
-        $pagosDetalle4->num_pago = 4;
-        $pagosDetalle4->fecha_pago = $request->pago4Fecha;
-        $pagosDetalle4->cantidad = $request->pago4Cantidad;
-        $pagosDetalle4->concepto = $request->concepto4;
-        $pagosDetalle4 ->usuario = Auth::user()->id;
+        $pagosDetalle4 ->usuario_creo = Auth::user()->id;
         $pagosDetalle4->save();
       }
 
@@ -695,7 +591,8 @@ class ClientesController extends Controller
       $pago ->save();
 
 
-               }
+
+
 
               return redirect('cliente');
     }
