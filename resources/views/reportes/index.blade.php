@@ -1,9 +1,12 @@
-@extends('admin.layouts.menu')
-
-@section('content')
-
 <link href="{{asset('public/select2/dist/css/select2.min.css')}}" rel="stylesheet" />
 <link href="{{asset('public/select2/dist/css/select2_bootstrap4theme.min.css')}}" rel="stylesheet" />
+
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
 <div class="col-md-12 text-center">
   <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
@@ -21,7 +24,7 @@
               </tr>
           </thead>
           <tbody style=" font-size: 80.5%;">
-  
+
               <tr >
                 <td>1</td>
                 <td>Reporte de ventas del dia</td>
@@ -32,7 +35,7 @@
                     </button>
                 </td>
               </tr>
-              
+
                <tr >
                 <td>2</td>
                 <td>Reporte cobros por fecha</td>
@@ -80,16 +83,12 @@
     </div>
   </div>
 </div>
-@section('modales')
+</x-app-layout>
 @include('modales.reporteVentas')
 @include('modales.reporteVentasSemana')
 @include('modales.reporteSemanaVendedor')
 @include('modales.reporteRenovaciones')
-@endsection
 
-@endsection
-
-@push('js')
 
   <script defer src="{{asset('public/js/jquery/jquery.dataTables.min.js')}}" ></script>
   <script defer src="{{asset('public/js/jquery/dataTables.bootstrap4.min.js')}}" ></script>
@@ -180,4 +179,4 @@
           });
 
     </script>
-@endpush
+
