@@ -14,7 +14,7 @@ class PagosController extends Controller
      */
     public function index()
     {
-      
+      return view('pagos.index');
     }
 
     /**
@@ -24,7 +24,7 @@ class PagosController extends Controller
      */
     public function create()
     {
-      
+
     }
 
     /**
@@ -35,7 +35,7 @@ class PagosController extends Controller
      */
     public function store(Request $request)
     {
-      
+
     }
 
     /**
@@ -57,7 +57,7 @@ class PagosController extends Controller
      */
     public function edit($id)
     {
-       
+
     }
 
     /**
@@ -69,8 +69,8 @@ class PagosController extends Controller
      */
     public function update(Request $request, $id)
     {
-     
-    
+
+
     }
 
     /**

@@ -48,6 +48,11 @@ class Datos extends Seeder
         Permission::create(['name' => 'choques_edit']);
         Permission::create(['name' => 'choques_destroy']);
 
+        Permission::create(['name' => 'pagos_create']);
+        Permission::create(['name' => 'pagos_view']);
+        Permission::create(['name' => 'pagos_edit']);
+        Permission::create(['name' => 'pagos_destroy']);
+
 
 
         $admin->givePermissionTo([
@@ -74,7 +79,12 @@ class Datos extends Seeder
             'choques_create',
             'choques_view',
             'choques_edit',
-            'choques_destroy'
+            'choques_destroy',
+
+            'pagos_create',
+            'pagos_view',
+            'pagos_edit',
+            'pagos_destroy'
 
 
         ]);
@@ -83,7 +93,12 @@ class Datos extends Seeder
             'clientes_create',
             'clientes_view',
             'clientes_edit',
-            'clientes_destroy'
+            'clientes_destroy',
+            'pagos_create',
+            'pagos_view',
+            'pagos_edit',
+            'pagos_destroy'
+
             ]);
         DB::table('users')->insert([
             'name' => 'Admin',

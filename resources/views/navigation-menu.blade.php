@@ -40,6 +40,11 @@
                             {{ __('Choques') }}
                         </x-jet-nav-link>
                     @endcan
+                    @can('pagos_view')
+                        <x-jet-nav-link href="{{ route('pagos.index') }}" :active="request()->routeIs('pagos.index')">
+                            {{ __('Pagos') }}
+                        </x-jet-nav-link>
+                    @endcan
                     @can('usuarios_view')
                         <x-jet-nav-link href="{{ route('reportes.index') }}" :active="request()->routeIs('reportes.index')">
                             {{ __('Reportes') }}
