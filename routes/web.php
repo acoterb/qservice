@@ -52,6 +52,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/reporteSemanaVendedor','App\Http\Controllers\ReportesController@reporteSemanaVendedor')->name('reporteSemanaVendedor');
     Route::get('/reporteRenovaciones','App\Http\Controllers\ReportesController@reporteRenovacione')->name('reporteRenovaciones');
 
+ // Pagos
+
+    Route::post('/pagos/busqueda', 'App\Http\Controllers\PagosController@buscado')->name('pagosBusqueda');
 
 });
 

@@ -7,7 +7,7 @@
     <div class="col-md-12 text-center">
         <div class="card" style="box-shadow: 0 5px 5px 0 rgba(0,0,0,0.5);">
 
-            <form method="POST" action="{{ route('choquesBusqueda') }}" aria-label="{{ __('Clientes') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('pagosBusqueda') }}" aria-label="{{ __('Clientes') }}" enctype="multipart/form-data">
                 <div class="card-body">
                     <div class="row">
 
