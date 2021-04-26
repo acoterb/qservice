@@ -105,6 +105,30 @@ class PagosController extends Controller
         $pagosDetalle3 = Pagos_detalle::where('pago_id',$pagos->id)->where('num_pago','3')->first();
         $pagosDetalle4 = Pagos_detalle::where('pago_id',$pagos->id)->where('num_pago','4')->first();
 
+        $cantidadPagada = 0 ;
+        $pagosRealizados = 0;
+
+        if ($pagosDetalle1)
+        {
+            $cantidadPagada += $pagosDetalle1->cantidad;
+            $pagosRealizados += 1;
+        }
+        if ($pagosDetalle2)
+        {
+            $cantidadPagada += $pagosDetalle2->cantidad;
+            $pagosRealizados += 1;
+        }
+        if ($pagosDetalle3)
+        {
+            $cantidadPagada += $pagosDetalle3->cantidad;
+            $pagosRealizados += 1;
+        }
+        if ($pagosDetalle4)
+        {
+            $cantidadPagada += $pagosDetalle4->cantidad;
+            $pagosRealizados += 1;
+        }
+
         $pagosFecha1 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','1')->first();
         $pagosFecha2 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','2')->first();
         $pagosFecha3 = Pagos_fecha::where('contrato_id',$cliente->id)->where('num_pago','3')->first();
@@ -115,6 +139,6 @@ class PagosController extends Controller
         $cobrador = $cobrador->all();
 
 
-        return view('pagos.edit',compact('vendedor','cobrador','cliente','clientes','pagos','pagosDetalle1','pagosDetalle2','pagosDetalle3','pagosDetalle4','pagosFecha1','pagosFecha2','pagosFecha3','pagosFecha4'));
+        return view('pagos.edit',compact('vendedor','cobrador','cliente','clientes','pagos','pagosDetalle1','pagosDetalle2','pagosDetalle3','pagosDetalle4','pagosFecha1','pagosFecha2','pagosFecha3','pagosFecha4','cantidadPagada','pagosRealizados'));
     }
 }
