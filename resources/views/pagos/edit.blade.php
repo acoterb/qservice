@@ -14,6 +14,7 @@
                     <div class="card-body">
                         <div class="row">
                             @csrf
+                            <input type="hidden" id="polizaID" name="polizaID" value="{{$cliente->id}}">
                             <div class="col-md-12">
                                 <br>
                                 <center>
@@ -85,6 +86,11 @@
                                          <option value="tarjeta">Tarjeta</option>
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                                <label for="fecha_pago">Fecha que pago</label>
+                                <input type="date" value="{{$date_now = date('Y-m-d')}}" id="fecha_pago" name="fecha_pago" class="form-control">
+                            </div>
+
                             <div class="col-md-12">
                                 <label for="concepto">Concepto</label>
                                 <textarea class="form-control notemptyField" rows="5" id="concepto" name="concepto" ></textarea>

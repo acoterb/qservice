@@ -9,8 +9,10 @@ use App\Models\Grua;
 use App\Models\Pagos_detalle;
 use App\Models\Pagos_fecha;
 use App\Models\Vendedore;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Pagos;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 class PagosController extends Controller
@@ -78,7 +80,19 @@ class PagosController extends Controller
     public function update(Request $request, $id)
     {
 
+        $pagosDetalle1 = new Pagos_detalle();
+        $pagosDetalle1->pago_id = $request->polizaID;
+        $pagosDetalle1->num_pago = $request->pagosRealizados + 1;
+        $pagosDetalle1->fecha_pago = $request->fecha_pago;
+        $pagosDetalle1->cantidad = $request->pago;
+        $pagosDetalle1->concepto = $request->concepto;
+        $pagosDetalle1->forma_pago = $request->formaPago;
+        $pagosDetalle1->usuario_creo = Auth::user()->id;
+        $pagosDetalle1->save();
 
+        $pago = Pagos::where('contrato_id', $request->polizaID)->first();
+        $pago ->pagosrealizados = count(Pagos_detalle::where('pago_id',$pago->id)->get());
+        return redirect('pagos');
     }
 
     /**
